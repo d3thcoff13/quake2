@@ -1286,51 +1286,50 @@ gitem_t	itemlist[] =
 	// WEAPONS 
 	//
 
-/* weapon_blaster (.3 .3 1) (-16 -16 -16) (16 16 16)
-always owned, never in the world
-*/
+	/*QUAKED ammo_grenades (.3 .3 1) (-16 -16 -16) (16 16 16)
+	*/
 	{
-		"weapon_blaster", 
-		NULL,
+		"ammo_grenades",
+		Pickup_Ammo,
 		Use_Weapon,
+		Drop_Ammo,
+		Weapon_Grenade,
+		"misc/am_pkup.wav",
+		"models/items/ammo/grenades/medium/tris.md2", 0,
+		"models/weapons/v_handgr/tris.md2",
+		/* icon */		"a_grenades",
+		/* pickup */	"Grenades",
+		/* width */		3,
+		5,
+		"grenades",
+		IT_AMMO | IT_WEAPON,
+		WEAP_GRENADES,
 		NULL,
-		Weapon_Blaster,
-		"misc/w_pkup.wav",
-		NULL, 0,
-		"models/weapons/v_blast/tris.md2",
-/* icon */		"w_blaster",
-/* pickup */	"Blaster",
-		0,
-		0,
-		NULL,
-		IT_WEAPON|IT_STAY_COOP,
-		WEAP_BLASTER,
-		NULL,
-		0,
-/* precache */ "weapons/blastf1a.wav misc/lasfly.wav"
+		AMMO_GRENADES,
+		/* precache */ "weapons/hgrent1a.wav weapons/hgrena1b.wav weapons/hgrenc1b.wav weapons/hgrenb1a.wav weapons/hgrenb2a.wav "
 	},
 
 /*QUAKED weapon_shotgun (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
-		"weapon_shotgun", 
-		Pickup_Weapon,
+		"ammo_cluster",
+		Pickup_Ammo,
 		Use_Weapon,
-		Drop_Weapon,
-		Weapon_Shotgun,
-		"misc/w_pkup.wav",
-		"models/weapons/g_shotg/tris.md2", EF_ROTATE,
-		"models/weapons/v_shotg/tris.md2",
-/* icon */		"w_shotgun",
-/* pickup */	"Shotgun",
-		0,
-		1,
-		"Shells",
-		IT_WEAPON|IT_STAY_COOP,
-		WEAP_SHOTGUN,
+		Drop_Ammo,
+		Weapon_Cluster,
+		"misc/am_pkup.wav",
+		"models/items/ammo/grenades/medium/tris.md2", 0,
+		"models/weapons/v_handgr/tris.md2",
+		/* icon */		"a_grenades",
+		/* pickup */	"Cluster",
+		/* width */		3,
+		5,
+		"cluster",
+		IT_AMMO | IT_WEAPON,
+		WEAP_GRENADES,
 		NULL,
-		0,
-/* precache */ "weapons/shotgf1b.wav weapons/shotgr1b.wav"
+		AMMO_GRENADES, //for item->tag
+		/* precache */ "weapons/hgrent1a.wav weapons/hgrena1b.wav weapons/hgrenc1b.wav weapons/hgrenb1a.wav weapons/hgrenb2a.wav "
 	},
 
 /*QUAKED weapon_supershotgun (.3 .3 1) (-16 -16 -16) (16 16 16)
@@ -1400,29 +1399,6 @@ always owned, never in the world
 		NULL,
 		0,
 /* precache */ "weapons/chngnu1a.wav weapons/chngnl1a.wav weapons/machgf3b.wav` weapons/chngnd1a.wav"
-	},
-
-/*QUAKED ammo_grenades (.3 .3 1) (-16 -16 -16) (16 16 16)
-*/
-	{
-		"ammo_grenades",
-		Pickup_Ammo,
-		Use_Weapon,
-		Drop_Ammo,
-		Weapon_Grenade,
-		"misc/am_pkup.wav",
-		"models/items/ammo/grenades/medium/tris.md2", 0,
-		"models/weapons/v_handgr/tris.md2",
-/* icon */		"a_grenades",
-/* pickup */	"Grenades",
-/* width */		3,
-		5,
-		"grenades",
-		IT_AMMO|IT_WEAPON,
-		WEAP_GRENADES,
-		NULL,
-		AMMO_GRENADES,
-/* precache */ "weapons/hgrent1a.wav weapons/hgrena1b.wav weapons/hgrenc1b.wav weapons/hgrenb1a.wav weapons/hgrenb2a.wav "
 	},
 
 /*QUAKED weapon_grenadelauncher (.3 .3 1) (-16 -16 -16) (16 16 16)
@@ -1538,27 +1514,6 @@ always owned, never in the world
 		NULL,
 		0,
 /* precache */ "sprites/s_bfg1.sp2 sprites/s_bfg2.sp2 sprites/s_bfg3.sp2 weapons/bfg__f1y.wav weapons/bfg__l1a.wav weapons/bfg__x1b.wav weapons/bfg_hum.wav"
-	},
-
-	{
-		"ammo_cluster",
-		Pickup_Ammo,
-		Use_Weapon,
-		Drop_Ammo,
-		Weapon_Cluster,
-		"misc/am_pkup.wav",
-		"models/items/ammo/grenades/medium/tris.md2", 0,
-		"models/weapons/v_handgr/tris.md2",
-		/* icon */		"a_grenades",
-		/* pickup */	"Cluster",
-		/* width */		3,
-		5,
-		"cluster",
-		IT_AMMO | IT_WEAPON,
-		WEAP_GRENADES,
-		NULL,
-		AMMO_GRENADES, //for item->tag
-		/* precache */ "weapons/hgrent1a.wav weapons/hgrena1b.wav weapons/hgrenc1b.wav weapons/hgrenb1a.wav weapons/hgrenb2a.wav "
 	},
 
 	//
