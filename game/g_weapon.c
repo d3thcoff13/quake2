@@ -570,8 +570,7 @@ static void Cluster_Explode(edict_t *ent)
 {
 	vec3_t		origin;
 
-	//Sean added these 4 vectors
-
+	//new vectors for cluster bombs
 	vec3_t   grenade1;
 	vec3_t   grenade2;
 	vec3_t   grenade3;
@@ -602,13 +601,13 @@ static void Cluster_Explode(edict_t *ent)
 	gi.WritePosition(origin);
 	gi.multicast(ent->s.origin, MULTICAST_PVS);
 
-	// SumFuka did this bit : give grenades up/outwards velocities
+	// Set vectors for cluster bombs
 	VectorSet(grenade1, 20, 20, 40);
 	VectorSet(grenade2, 20, -20, 40);
 	VectorSet(grenade3, -20, 20, 40);
 	VectorSet(grenade4, -20, -20, 40);
 
-	// Sean : explode the four grenades outwards
+	//Set off cluster bombs
 	fire_grenade(ent, origin, grenade1, 120, 10, 1.0, 120);
 	fire_grenade(ent, origin, grenade2, 120, 10, 1.0, 120);
 	fire_grenade(ent, origin, grenade3, 120, 10, 1.0, 120);
@@ -695,6 +694,163 @@ void fire_cluster(edict_t *self, vec3_t start, vec3_t aimdir, int damage, int sp
 		gi.sound(self, CHAN_WEAPON, gi.soundindex("weapons/hgrent1a.wav"), 1, ATTN_NORM, 0);
 		gi.linkentity(grenade);
 	}
+}
+
+/*
+=================
+fire_proximity
+=================
+*/
+static void Proximity_Explode(edict_t *ent)
+{
+	vec3_t		origin;
+	int			mod;
+
+	if (ent->owner->client)
+		PlayerNoise(ent->owner, ent->s.origin, PNOISE_IMPACT);
+
+	//FIXME: if we are onground then raise our Z just a bit since we are a point?
+	if (ent->enemy)
+	{
+		float	points;
+		vec3_t	v;
+		vec3_t	dir;
+
+		VectorAdd(ent->enemy->mins, ent->enemy->maxs, v);
+		VectorMA(ent->enemy->s.origin, 0.5, v, v);
+		VectorSubtract(ent->s.origin, v, v);
+		points = ent->dmg - 0.5 * VectorLength(v);
+		VectorSubtract(ent->enemy->s.origin, ent->s.origin, dir);
+		if (ent->spawnflags & 1)
+			mod = MOD_HANDGRENADE;
+		else
+			mod = MOD_GRENADE;
+		T_Damage(ent->enemy, ent, ent->owner, dir, ent->s.origin, vec3_origin, (int)points, (int)points, DAMAGE_RADIUS, mod);
+	}
+
+	if (ent->spawnflags & 2)
+		mod = MOD_HELD_GRENADE;
+	else if (ent->spawnflags & 1)
+		mod = MOD_HG_SPLASH;
+	else
+		mod = MOD_G_SPLASH;
+	T_RadiusDamage(ent, ent->owner, ent->dmg, ent->enemy, ent->dmg_radius, mod);
+
+	VectorMA(ent->s.origin, -0.02, ent->velocity, origin);
+	gi.WriteByte(svc_temp_entity);
+	if (ent->waterlevel)
+	{
+		if (ent->groundentity)
+			gi.WriteByte(TE_GRENADE_EXPLOSION_WATER);
+		else
+			gi.WriteByte(TE_ROCKET_EXPLOSION_WATER);
+	}
+	else
+	{
+		if (ent->groundentity)
+			gi.WriteByte(TE_GRENADE_EXPLOSION);
+		else
+			gi.WriteByte(TE_ROCKET_EXPLOSION);
+	}
+	gi.WritePosition(origin);
+	gi.multicast(ent->s.origin, MULTICAST_PHS);
+
+	G_FreeEdict(ent);
+}
+
+static void Proximity_Touch(edict_t *ent, edict_t *other, cplane_t *plane, csurface_t *surf)
+{
+	if (other == ent->owner)
+		return;
+
+	if (surf && (surf->flags & SURF_SKY))
+	{
+		G_FreeEdict(ent);
+		return;
+	}
+
+	if (!other->takedamage)
+	{
+		if (ent->spawnflags & 1)
+		{
+			if (random() > 0.5)
+				gi.sound(ent, CHAN_VOICE, gi.soundindex("weapons/hgrenb1a.wav"), 1, ATTN_NORM, 0);
+			else
+				gi.sound(ent, CHAN_VOICE, gi.soundindex("weapons/hgrenb2a.wav"), 1, ATTN_NORM, 0);
+		}
+		else
+		{
+			gi.sound(ent, CHAN_VOICE, gi.soundindex("weapons/grenlb1b.wav"), 1, ATTN_NORM, 0);
+		}
+		return;
+	}
+
+	ent->enemy = other;
+	Grenade_Explode(ent);
+}
+
+static void proximity_think(edict_t *ent)
+ {
+	edict_t *blip = NULL;
+	
+		if (level.time > ent->delay)
+		 {
+		Proximity_Explode(ent);
+		return;
+		}
+	
+		ent->think = proximity_think;
+	while ((blip = findradius(blip, ent->s.origin, 100)) != NULL)
+		 {
+		//if (!(blip->svflags & SVF_MONSTER) && !blip->client)
+			 //continue;
+		if (!blip == ent->owner)
+			 continue;
+		if (!blip->takedamage)
+			 continue;
+		if (blip->health <= 0)
+			 continue;
+		if (!visible(ent, blip))
+			 continue;
+		ent->think = Grenade_Explode;
+		break;
+		}
+	
+		ent->nextthink = level.time + .1;
+	}
+
+void fire_proximity(edict_t *self, vec3_t start, vec3_t aimdir, int damage, int speed, float timer, float damage_radius)
+{
+	edict_t	*grenade;
+	vec3_t	dir;
+	vec3_t	forward, right, up;
+
+	vectoangles(aimdir, dir);
+	AngleVectors(dir, forward, right, up);
+
+	grenade = G_Spawn();
+	VectorCopy(start, grenade->s.origin);
+	VectorScale(aimdir, speed, grenade->velocity);
+	VectorMA(grenade->velocity, 200 + crandom() * 10.0, up, grenade->velocity);
+	VectorMA(grenade->velocity, crandom() * 10.0, right, grenade->velocity);
+	VectorSet(grenade->avelocity, 300, 300, 300);
+	grenade->movetype = MOVETYPE_BOUNCE;
+	grenade->clipmask = MASK_SHOT;
+	grenade->solid = SOLID_BBOX;
+	grenade->s.effects |= EF_GRENADE;
+	VectorClear(grenade->mins);
+	VectorClear(grenade->maxs);
+	grenade->s.modelindex = gi.modelindex("models/objects/grenade/tris.md2");
+	grenade->owner = self;
+	grenade->touch = Proximity_Touch; //Edit here.
+	grenade->nextthink = level.time + .1;
+	grenade->think = proximity_think; //Edit here.
+	grenade->delay = level.time + 60;
+	grenade->dmg = damage;
+	grenade->dmg_radius = damage_radius;
+	grenade->classname = "grenade";
+
+	gi.linkentity(grenade);
 }
 
 

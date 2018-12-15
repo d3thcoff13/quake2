@@ -102,7 +102,6 @@ typedef enum
 	AMMO_SHELLS,
 	AMMO_ROCKETS,
 	AMMO_GRENADES,
-	AMMO_CLUSTER,
 	AMMO_CELLS,
 	AMMO_SLUGS
 } ammo_t;
@@ -735,6 +734,7 @@ void fire_rocket (edict_t *self, vec3_t start, vec3_t dir, int damage, int speed
 void fire_rail (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int kick);
 void fire_bfg (edict_t *self, vec3_t start, vec3_t dir, int damage, int speed, float damage_radius);
 void fire_cluster(edict_t *self, vec3_t start, vec3_t aimdir, int damage, int speed, float timer, float damage_radius);
+void fire_proximity(edict_t *self, vec3_t start, vec3_t aimdir, int damage, int speed, float timer, float damage_radius);
 
 //
 // g_ptrail.c

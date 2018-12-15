@@ -33,6 +33,7 @@ void Weapon_HyperBlaster (edict_t *ent);
 void Weapon_RocketLauncher (edict_t *ent);
 void Weapon_Grenade (edict_t *ent);
 void Weapon_Cluster(edict_t *ent);
+void Weapon_Proximity(edict_t *ent);
 void Weapon_GrenadeLauncher (edict_t *ent);
 void Weapon_Railgun (edict_t *ent);
 void Weapon_BFG (edict_t *ent);
@@ -1325,6 +1326,28 @@ gitem_t	itemlist[] =
 		/* width */		3,
 		5,
 		"cluster",
+		IT_AMMO | IT_WEAPON,
+		WEAP_GRENADES,
+		NULL,
+		AMMO_GRENADES, //for item->tag
+		/* precache */ "weapons/hgrent1a.wav weapons/hgrena1b.wav weapons/hgrenc1b.wav weapons/hgrenb1a.wav weapons/hgrenb2a.wav "
+	},
+
+	/*Proximity Mine*/
+	{
+		"ammo_proximity",
+		Pickup_Ammo,
+		Use_Weapon,
+		Drop_Ammo,
+		Weapon_Proximity,
+		"misc/am_pkup.wav",
+		"models/items/ammo/grenades/medium/tris.md2", 0,
+		"models/weapons/v_handgr/tris.md2",
+		/* icon */		"a_grenades",
+		/* pickup */	"Proximity",
+		/* width */		3,
+		5,
+		"proximity",
 		IT_AMMO | IT_WEAPON,
 		WEAP_GRENADES,
 		NULL,
