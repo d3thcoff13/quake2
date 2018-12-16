@@ -35,6 +35,7 @@ void Weapon_Grenade (edict_t *ent);
 void Weapon_Cluster(edict_t *ent);
 void Weapon_Proximity(edict_t *ent);
 void Weapon_Pulse(edict_t *ent);
+void Weapon_Fastball(edict_t *ent);
 void Weapon_GrenadeLauncher (edict_t *ent);
 void Weapon_Railgun (edict_t *ent);
 void Weapon_BFG (edict_t *ent);
@@ -1356,7 +1357,7 @@ gitem_t	itemlist[] =
 		/* precache */ "weapons/hgrent1a.wav weapons/hgrena1b.wav weapons/hgrenc1b.wav weapons/hgrenb1a.wav weapons/hgrenb2a.wav "
 	},
 
-	/*Pulse Mine*/
+	/*Pulse Grenade*/
 	{
 		"ammo_pulse",
 		Pickup_Ammo,
@@ -1378,27 +1379,26 @@ gitem_t	itemlist[] =
 		/* precache */ "weapons/hgrent1a.wav weapons/hgrena1b.wav weapons/hgrenc1b.wav weapons/hgrenb1a.wav weapons/hgrenb2a.wav "
 	},
 
-/*QUAKED weapon_machinegun (.3 .3 1) (-16 -16 -16) (16 16 16)
-*/
+	/*Fastball Grenade*/
 	{
-		"weapon_machinegun", 
-		Pickup_Weapon,
+		"ammo_fastball",
+		Pickup_Ammo,
 		Use_Weapon,
-		Drop_Weapon,
-		Weapon_Machinegun,
-		"misc/w_pkup.wav",
-		"models/weapons/g_machn/tris.md2", EF_ROTATE,
-		"models/weapons/v_machn/tris.md2",
-/* icon */		"w_machinegun",
-/* pickup */	"Machinegun",
-		0,
-		1,
-		"Bullets",
-		IT_WEAPON|IT_STAY_COOP,
-		WEAP_MACHINEGUN,
+		Drop_Ammo,
+		Weapon_Fastball,
+		"misc/am_pkup.wav",
+		"models/items/ammo/grenades/medium/tris.md2", 0,
+		"models/weapons/v_handgr/tris.md2",
+		/* icon */		"a_grenades",
+		/* pickup */	"Fastball",
+		/* width */		3,
+		5,
+		"fastball",
+		IT_AMMO | IT_WEAPON,
+		WEAP_GRENADES,
 		NULL,
-		0,
-/* precache */ "weapons/machgf1b.wav weapons/machgf2b.wav weapons/machgf3b.wav weapons/machgf4b.wav weapons/machgf5b.wav"
+		AMMO_GRENADES, //for item->tag
+		/* precache */ "weapons/hgrent1a.wav weapons/hgrena1b.wav weapons/hgrenc1b.wav weapons/hgrenb1a.wav weapons/hgrenb2a.wav "
 	},
 
 /*QUAKED weapon_chaingun (.3 .3 1) (-16 -16 -16) (16 16 16)
