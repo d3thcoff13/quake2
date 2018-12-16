@@ -568,8 +568,13 @@ void T_RadiusDamage (edict_t *inflictor, edict_t *attacker, float damage, edict_
 		{
 			if (CanDamage (ent, inflictor))
 			{
-				VectorSubtract (ent->s.origin, inflictor->s.origin, dir);
-				T_Damage (ent, inflictor, attacker, dir, inflictor->s.origin, vec3_origin, (int)points, (int)points, DAMAGE_RADIUS, mod);
+				if (inflictor->grenade_type == "pulse"){
+					VectorSubtract(ent->s.origin, inflictor->s.origin, dir);
+					T_Damage(ent, inflictor, attacker, dir, inflictor->s.origin, vec3_origin, (int)points, 0, DAMAGE_RADIUS | DAMAGE_NO_KNOCKBACK, mod);
+				}else{
+					VectorSubtract(ent->s.origin, inflictor->s.origin, dir);
+					T_Damage(ent, inflictor, attacker, dir, inflictor->s.origin, vec3_origin, (int)points, (int)points, DAMAGE_RADIUS, mod);
+				}
 			}
 		}
 	}

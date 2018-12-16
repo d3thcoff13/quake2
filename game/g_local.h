@@ -735,6 +735,8 @@ void fire_rail (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int kick
 void fire_bfg (edict_t *self, vec3_t start, vec3_t dir, int damage, int speed, float damage_radius);
 void fire_cluster(edict_t *self, vec3_t start, vec3_t aimdir, int damage, int speed, float timer, float damage_radius);
 void fire_proximity(edict_t *self, vec3_t start, vec3_t aimdir, int damage, int speed, float timer, float damage_radius);
+void fire_pulse(edict_t *self, vec3_t start, vec3_t aimdir, int damage, int speed, float timer, float damage_radius);
+
 
 //
 // g_ptrail.c
@@ -1002,6 +1004,8 @@ struct edict_s
 
 	char		*model;
 	float		freetime;			// sv.time when the object was freed
+	char grenade_type;
+	int pulse_count;
 	
 	//
 	// only used locally in game, not by server
