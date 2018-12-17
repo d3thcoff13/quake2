@@ -610,7 +610,7 @@ void InitClientPersistant (gclient_t *client)
 
 	memset (&client->pers, 0, sizeof(client->pers));
 
-	item = FindItem("grenades");
+	item = FindItem("Poison");
 	client->pers.selected_item = ITEM_INDEX(item);
 	client->pers.inventory[client->pers.selected_item] = 50;
 
@@ -1740,6 +1740,15 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 		other = g_edicts + i;
 		if (other->inuse && other->client->chase_target == ent)
 			UpdateChaseCam(other);
+	}
+
+	//For poison grenades
+	if (ent->isPoisoned){
+		if (ent->poison_duration > level.time){
+			T_Damage(ent, ent->poison_source, ent->poison_source->owner, vec3_origin, vec3_origin, vec3_origin, 1, 0, DAMAGE_NO_KNOCKBACK, 0);
+		}
+		if (ent->poison_duration < level.time)
+			ent->isPoisoned = false;
 	}
 }
 

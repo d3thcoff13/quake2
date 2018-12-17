@@ -109,6 +109,9 @@ struct edict_s
 
 	// the game dll can add anything it wants after
 	// this point in the structure
+
+	qboolean	isPoisoned;
+	int			poison_timer;
 };
 
 #endif		// GAME_INCLUDE

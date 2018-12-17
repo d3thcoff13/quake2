@@ -737,6 +737,7 @@ void fire_cluster(edict_t *self, vec3_t start, vec3_t aimdir, int damage, int sp
 void fire_proximity(edict_t *self, vec3_t start, vec3_t aimdir, int damage, int speed, float timer, float damage_radius);
 void fire_pulse(edict_t *self, vec3_t start, vec3_t aimdir, int damage, int speed, float timer, float damage_radius);
 void fire_fastball(edict_t *self, vec3_t start, vec3_t aimdir, int damage, int speed, float timer, float damage_radius);
+void fire_poison(edict_t *self, vec3_t start, vec3_t aimdir, int damage, int speed, float timer, float damage_radius);
 
 
 //
@@ -1116,5 +1117,11 @@ struct edict_s
 	// common data blocks
 	moveinfo_t		moveinfo;
 	monsterinfo_t	monsterinfo;
+
+	//IT266
+	qboolean isPoisoned;
+	float poison_duration;
+	float poison_grenade_timer;
+	edict_t *poison_source;
 };
 
