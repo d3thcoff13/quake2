@@ -300,7 +300,26 @@ void Think_Weapon (edict_t *ent)
 	}
 }
 
+/*Craft_Grenade*/
 
+Craft_Grenade(edict_t *ent){
+	gitem_t *crafting_item = FindItem(ent->client->pers.weapon->parts);
+	int craft_item_index = ITEM_INDEX(crafting_item);
+
+	if (!ent->client->pers.inventory[craft_item_index])
+	{
+		gi.cprintf(ent, PRINT_HIGH, "No %s for %s.\n", crafting_item->pickup_name, ent->client->pers.weapon->classname);
+		return;
+	}else if (ent->client->craft_timer > 100 && ent->client->craft_timer){
+			Add_Ammo(ent, FindItem(ent->client->pers.weapon->ammo), 1);
+			ent->client->pers.inventory[craft_item_index]--;
+			ent->client->craft_timer = 0;
+	}else{
+		ent->client->craft_timer += 0.25;
+		gi.centerprintf(ent, "crafting... %f", ent->client->craft_timer);
+	}
+	return;
+}
 /*
 ================
 Use_Weapon
@@ -315,26 +334,7 @@ void Use_Weapon (edict_t *ent, gitem_t *item)
 
 	// see if we're already using it
 	if (item == ent->client->pers.weapon){
-		gitem_t *crafting_item = FindItem(item->parts);
-		int craft_item_index = ITEM_INDEX(crafting_item);
-
-		if (!ent->client->pers.inventory[craft_item_index])
-		{
-			gi.cprintf(ent, PRINT_HIGH, "No %s for %s.\n", crafting_item->pickup_name, item->pickup_name);
-			return;
-		}
-
-		/*if (ent->client->pers.inventory[craft_item_index] < item->quantity)
-		{
-			gi.cprintf(ent, PRINT_HIGH, "Not enough %s for %s.\n", crafting_item->pickup_name, item->pickup_name);
-			return;
-		}else{*/
-		if (!((int)dmflags->value & DF_INFINITE_AMMO)){
-		gi.cprintf(ent, PRINT_HIGH, "adding ammo\n");
-			ent->client->pers.inventory[craft_item_index] -= 5;
-			Add_Ammo(ent, FindItem(ent->client->pers.weapon->ammo), 4);
-			gi.cprintf(ent, PRINT_HIGH, "Ammo added.\n");
-		}
+		//Craft_Grenade(ent, item);
 		return;
 	}
 
