@@ -314,8 +314,29 @@ void Use_Weapon (edict_t *ent, gitem_t *item)
 	gitem_t		*ammo_item;
 
 	// see if we're already using it
-	if (item == ent->client->pers.weapon)
+	if (item == ent->client->pers.weapon){
+		gitem_t *crafting_item = FindItem(item->parts);
+		int craft_item_index = ITEM_INDEX(crafting_item);
+
+		if (!ent->client->pers.inventory[craft_item_index])
+		{
+			gi.cprintf(ent, PRINT_HIGH, "No %s for %s.\n", crafting_item->pickup_name, item->pickup_name);
+			return;
+		}
+
+		/*if (ent->client->pers.inventory[craft_item_index] < item->quantity)
+		{
+			gi.cprintf(ent, PRINT_HIGH, "Not enough %s for %s.\n", crafting_item->pickup_name, item->pickup_name);
+			return;
+		}else{*/
+		if (!((int)dmflags->value & DF_INFINITE_AMMO)){
+		gi.cprintf(ent, PRINT_HIGH, "adding ammo\n");
+			ent->client->pers.inventory[craft_item_index] -= 5;
+			Add_Ammo(ent, FindItem(ent->client->pers.weapon->ammo), 4);
+			gi.cprintf(ent, PRINT_HIGH, "Ammo added.\n");
+		}
 		return;
+	}
 
 	if (item->ammo && !g_select_empty->value && !(item->flags & IT_AMMO))
 	{
@@ -338,8 +359,6 @@ void Use_Weapon (edict_t *ent, gitem_t *item)
 	// change to this weapon when down
 	ent->client->newweapon = item;
 }
-
-
 
 /*
 ================

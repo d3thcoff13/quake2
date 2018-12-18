@@ -278,6 +278,8 @@ qboolean Pickup_Pack (edict_t *ent, edict_t *other)
 		other->client->pers.max_cells = 300;
 	if (other->client->pers.max_slugs < 100)
 		other->client->pers.max_slugs = 100;
+	if (other->client->pers.max_parts < 100)
+		other->client->pers.max_parts = 100;
 
 	item = FindItem("Bullets");
 	if (item)
@@ -332,6 +334,16 @@ qboolean Pickup_Pack (edict_t *ent, edict_t *other)
 		if (other->client->pers.inventory[index] > other->client->pers.max_slugs)
 			other->client->pers.inventory[index] = other->client->pers.max_slugs;
 	}
+
+	item = FindItem("Parts");
+	if (item)
+	{
+		index = ITEM_INDEX(item);
+		other->client->pers.inventory[index] += item->quantity;
+		if (other->client->pers.inventory[index] > other->client->pers.max_parts)
+			other->client->pers.inventory[index] = other->client->pers.max_parts;
+	}
+
 
 	if (!(ent->spawnflags & DROPPED_ITEM) && (deathmatch->value))
 		SetRespawn (ent, ent->item->quantity);
@@ -469,6 +481,8 @@ qboolean Add_Ammo (edict_t *ent, gitem_t *item, int count)
 		max = ent->client->pers.max_cells;
 	else if (item->tag == AMMO_SLUGS)
 		max = ent->client->pers.max_slugs;
+	else if (item->tag == AMMO_PARTS)
+		max = ent->client->pers.max_parts;
 	else
 		return false;
 
@@ -514,6 +528,8 @@ qboolean Pickup_Ammo (edict_t *ent, edict_t *other)
 		SetRespawn (ent, 30);
 	return true;
 }
+
+
 
 void Drop_Ammo (edict_t *ent, gitem_t *item)
 {
@@ -1166,7 +1182,8 @@ gitem_t	itemlist[] =
 		0,
 		&bodyarmor_info,
 		ARMOR_BODY,
-/* precache */ ""
+/* precache */ "",
+		NULL
 	},
 
 /*QUAKED item_armor_combat (.3 .3 1) (-16 -16 -16) (16 16 16)
@@ -1189,7 +1206,8 @@ gitem_t	itemlist[] =
 		0,
 		&combatarmor_info,
 		ARMOR_COMBAT,
-/* precache */ ""
+		/* precache */ "",
+		NULL
 	},
 
 /*QUAKED item_armor_jacket (.3 .3 1) (-16 -16 -16) (16 16 16)
@@ -1212,7 +1230,8 @@ gitem_t	itemlist[] =
 		0,
 		&jacketarmor_info,
 		ARMOR_JACKET,
-/* precache */ ""
+		/* precache */ "",
+		NULL
 	},
 
 /*QUAKED item_armor_shard (.3 .3 1) (-16 -16 -16) (16 16 16)
@@ -1235,7 +1254,8 @@ gitem_t	itemlist[] =
 		0,
 		NULL,
 		ARMOR_SHARD,
-/* precache */ ""
+		/* precache */ "",
+		NULL
 	},
 
 
@@ -1259,7 +1279,8 @@ gitem_t	itemlist[] =
 		0,
 		NULL,
 		0,
-/* precache */ ""
+		/* precache */ "",
+		NULL
 	},
 
 /*QUAKED item_power_shield (.3 .3 1) (-16 -16 -16) (16 16 16)
@@ -1282,7 +1303,8 @@ gitem_t	itemlist[] =
 		0,
 		NULL,
 		0,
-/* precache */ "misc/power2.wav misc/power1.wav"
+		/* precache */ "misc/power2.wav misc/power1.wav",
+		NULL
 	},
 
 
@@ -1310,7 +1332,8 @@ gitem_t	itemlist[] =
 		WEAP_GRENADES,
 		NULL,
 		AMMO_GRENADES,
-		/* precache */ "weapons/hgrent1a.wav weapons/hgrena1b.wav weapons/hgrenc1b.wav weapons/hgrenb1a.wav weapons/hgrenb2a.wav "
+		/* precache */ "weapons/hgrent1a.wav weapons/hgrena1b.wav weapons/hgrenc1b.wav weapons/hgrenb1a.wav weapons/hgrenb2a.wav ",
+		NULL
 	},
 
 /*QUAKED weapon_shotgun (.3 .3 1) (-16 -16 -16) (16 16 16)
@@ -1333,7 +1356,31 @@ gitem_t	itemlist[] =
 		WEAP_GRENADES,
 		NULL,
 		AMMO_GRENADES, //for item->tag
-		/* precache */ "weapons/hgrent1a.wav weapons/hgrena1b.wav weapons/hgrenc1b.wav weapons/hgrenb1a.wav weapons/hgrenb2a.wav "
+		/* precache */ "weapons/hgrent1a.wav weapons/hgrena1b.wav weapons/hgrenc1b.wav weapons/hgrenb1a.wav weapons/hgrenb2a.wav ",
+		"Parts"
+	},
+	
+/*cluster parts*/
+	{
+		"cluster_parts",
+		Pickup_Ammo,
+		NULL,
+		Drop_Ammo,
+		NULL,
+		"misc/am_pkup.wav",
+		"models/items/ammo/grenades/medium/tris.md2", 0,
+		NULL,
+		/* icon */		"a_grenades",
+		/* pickup */	"Parts",
+		/* width */		3,
+		10,
+		NULL,
+		IT_AMMO,
+		0,
+		NULL,
+		AMMO_PARTS,
+		/* precache */ "",
+		NULL
 	},
 
 	/*Proximity Mine*/
@@ -1355,7 +1402,8 @@ gitem_t	itemlist[] =
 		WEAP_GRENADES,
 		NULL,
 		AMMO_GRENADES, //for item->tag
-		/* precache */ "weapons/hgrent1a.wav weapons/hgrena1b.wav weapons/hgrenc1b.wav weapons/hgrenb1a.wav weapons/hgrenb2a.wav "
+		/* precache */ "weapons/hgrent1a.wav weapons/hgrena1b.wav weapons/hgrenc1b.wav weapons/hgrenb1a.wav weapons/hgrenb2a.wav ",
+		NULL
 	},
 
 	/*Pulse Grenade*/
@@ -1377,7 +1425,8 @@ gitem_t	itemlist[] =
 		WEAP_GRENADES,
 		NULL,
 		AMMO_GRENADES, //for item->tag
-		/* precache */ "weapons/hgrent1a.wav weapons/hgrena1b.wav weapons/hgrenc1b.wav weapons/hgrenb1a.wav weapons/hgrenb2a.wav "
+		/* precache */ "weapons/hgrent1a.wav weapons/hgrena1b.wav weapons/hgrenc1b.wav weapons/hgrenb1a.wav weapons/hgrenb2a.wav ",
+		NULL
 	},
 
 	/*Fastball Grenade*/
@@ -1399,7 +1448,8 @@ gitem_t	itemlist[] =
 		WEAP_GRENADES,
 		NULL,
 		AMMO_GRENADES, //for item->tag
-		/* precache */ "weapons/hgrent1a.wav weapons/hgrena1b.wav weapons/hgrenc1b.wav weapons/hgrenb1a.wav weapons/hgrenb2a.wav "
+		/* precache */ "weapons/hgrent1a.wav weapons/hgrena1b.wav weapons/hgrenc1b.wav weapons/hgrenb1a.wav weapons/hgrenb2a.wav ",
+		NULL
 	},
 
 	/*Poison Grenade*/
@@ -1421,7 +1471,8 @@ gitem_t	itemlist[] =
 		WEAP_GRENADES,
 		NULL,
 		AMMO_GRENADES, //for item->tag
-		/* precache */ "weapons/hgrent1a.wav weapons/hgrena1b.wav weapons/hgrenc1b.wav weapons/hgrenb1a.wav weapons/hgrenb2a.wav "
+		/* precache */ "weapons/hgrent1a.wav weapons/hgrena1b.wav weapons/hgrenc1b.wav weapons/hgrenb1a.wav weapons/hgrenb2a.wav ",
+		NULL
 	},
 
 /*QUAKED weapon_grenadelauncher (.3 .3 1) (-16 -16 -16) (16 16 16)
@@ -1444,7 +1495,8 @@ gitem_t	itemlist[] =
 		WEAP_GRENADELAUNCHER,
 		NULL,
 		0,
-/* precache */ "models/objects/grenade/tris.md2 weapons/grenlf1a.wav weapons/grenlr1b.wav weapons/grenlb1b.wav"
+		/* precache */ "models/objects/grenade/tris.md2 weapons/grenlf1a.wav weapons/grenlr1b.wav weapons/grenlb1b.wav",
+		NULL
 	},
 
 /*QUAKED weapon_rocketlauncher (.3 .3 1) (-16 -16 -16) (16 16 16)
@@ -1467,7 +1519,8 @@ gitem_t	itemlist[] =
 		WEAP_ROCKETLAUNCHER,
 		NULL,
 		0,
-/* precache */ "models/objects/rocket/tris.md2 weapons/rockfly.wav weapons/rocklf1a.wav weapons/rocklr1b.wav models/objects/debris2/tris.md2"
+		/* precache */ "models/objects/rocket/tris.md2 weapons/rockfly.wav weapons/rocklf1a.wav weapons/rocklr1b.wav models/objects/debris2/tris.md2",
+		NULL
 	},
 
 /*QUAKED weapon_hyperblaster (.3 .3 1) (-16 -16 -16) (16 16 16)
@@ -1490,7 +1543,8 @@ gitem_t	itemlist[] =
 		WEAP_HYPERBLASTER,
 		NULL,
 		0,
-/* precache */ "weapons/hyprbu1a.wav weapons/hyprbl1a.wav weapons/hyprbf1a.wav weapons/hyprbd1a.wav misc/lasfly.wav"
+		/* precache */ "weapons/hyprbu1a.wav weapons/hyprbl1a.wav weapons/hyprbf1a.wav weapons/hyprbd1a.wav misc/lasfly.wav",
+		NULL
 	},
 
 /*QUAKED weapon_railgun (.3 .3 1) (-16 -16 -16) (16 16 16)
@@ -1513,7 +1567,8 @@ gitem_t	itemlist[] =
 		WEAP_RAILGUN,
 		NULL,
 		0,
-/* precache */ "weapons/rg_hum.wav"
+		/* precache */ "weapons/rg_hum.wav",
+		NULL
 	},
 
 /*QUAKED weapon_bfg (.3 .3 1) (-16 -16 -16) (16 16 16)
@@ -1536,7 +1591,8 @@ gitem_t	itemlist[] =
 		WEAP_BFG,
 		NULL,
 		0,
-/* precache */ "sprites/s_bfg1.sp2 sprites/s_bfg2.sp2 sprites/s_bfg3.sp2 weapons/bfg__f1y.wav weapons/bfg__l1a.wav weapons/bfg__x1b.wav weapons/bfg_hum.wav"
+		/* precache */ "sprites/s_bfg1.sp2 sprites/s_bfg2.sp2 sprites/s_bfg3.sp2 weapons/bfg__f1y.wav weapons/bfg__l1a.wav weapons/bfg__x1b.wav weapons/bfg_hum.wav",
+		NULL
 	},
 
 	//
@@ -1563,7 +1619,8 @@ gitem_t	itemlist[] =
 		0,
 		NULL,
 		AMMO_SHELLS,
-/* precache */ ""
+		/* precache */ "",
+		NULL
 	},
 
 /*QUAKED ammo_bullets (.3 .3 1) (-16 -16 -16) (16 16 16)
@@ -1586,7 +1643,8 @@ gitem_t	itemlist[] =
 		0,
 		NULL,
 		AMMO_BULLETS,
-/* precache */ ""
+		/* precache */ "",
+		NULL
 	},
 
 /*QUAKED ammo_cells (.3 .3 1) (-16 -16 -16) (16 16 16)
@@ -1609,7 +1667,8 @@ gitem_t	itemlist[] =
 		0,
 		NULL,
 		AMMO_CELLS,
-/* precache */ ""
+		/* precache */ "",
+		NULL
 	},
 
 /*QUAKED ammo_rockets (.3 .3 1) (-16 -16 -16) (16 16 16)
@@ -1632,7 +1691,8 @@ gitem_t	itemlist[] =
 		0,
 		NULL,
 		AMMO_ROCKETS,
-/* precache */ ""
+		/* precache */ "",
+		NULL
 	},
 
 /*QUAKED ammo_slugs (.3 .3 1) (-16 -16 -16) (16 16 16)
@@ -1655,7 +1715,8 @@ gitem_t	itemlist[] =
 		0,
 		NULL,
 		AMMO_SLUGS,
-/* precache */ ""
+		/* precache */ "",
+		NULL
 	},
 
 
@@ -1682,7 +1743,8 @@ gitem_t	itemlist[] =
 		0,
 		NULL,
 		0,
-/* precache */ "items/damage.wav items/damage2.wav items/damage3.wav"
+		/* precache */ "items/damage.wav items/damage2.wav items/damage3.wav",
+		NULL
 	},
 
 /*QUAKED item_invulnerability (.3 .3 1) (-16 -16 -16) (16 16 16)
@@ -1705,7 +1767,8 @@ gitem_t	itemlist[] =
 		0,
 		NULL,
 		0,
-/* precache */ "items/protect.wav items/protect2.wav items/protect4.wav"
+		/* precache */ "items/protect.wav items/protect2.wav items/protect4.wav",
+		NULL
 	},
 
 /*QUAKED item_silencer (.3 .3 1) (-16 -16 -16) (16 16 16)
@@ -1728,7 +1791,8 @@ gitem_t	itemlist[] =
 		0,
 		NULL,
 		0,
-/* precache */ ""
+		/* precache */ "",
+		NULL
 	},
 
 /*QUAKED item_breather (.3 .3 1) (-16 -16 -16) (16 16 16)
@@ -1751,7 +1815,8 @@ gitem_t	itemlist[] =
 		0,
 		NULL,
 		0,
-/* precache */ "items/airout.wav"
+		/* precache */ "items/airout.wav",
+		NULL
 	},
 
 /*QUAKED item_enviro (.3 .3 1) (-16 -16 -16) (16 16 16)
@@ -1774,7 +1839,8 @@ gitem_t	itemlist[] =
 		0,
 		NULL,
 		0,
-/* precache */ "items/airout.wav"
+		/* precache */ "items/airout.wav",
+		NULL
 	},
 
 /*QUAKED item_ancient_head (.3 .3 1) (-16 -16 -16) (16 16 16)
@@ -1798,7 +1864,8 @@ Special item that gives +2 to maximum health
 		0,
 		NULL,
 		0,
-/* precache */ ""
+		/* precache */ "",
+		NULL
 	},
 
 /*QUAKED item_adrenaline (.3 .3 1) (-16 -16 -16) (16 16 16)
@@ -1822,7 +1889,8 @@ gives +1 to maximum health
 		0,
 		NULL,
 		0,
-/* precache */ ""
+		/* precache */ "",
+		NULL
 	},
 
 /*QUAKED item_bandolier (.3 .3 1) (-16 -16 -16) (16 16 16)
@@ -1845,7 +1913,8 @@ gives +1 to maximum health
 		0,
 		NULL,
 		0,
-/* precache */ ""
+		/* precache */ "",
+		NULL
 	},
 
 /*QUAKED item_pack (.3 .3 1) (-16 -16 -16) (16 16 16)
@@ -1868,7 +1937,8 @@ gives +1 to maximum health
 		0,
 		NULL,
 		0,
-/* precache */ ""
+		/* precache */ "",
+		NULL
 	},
 
 	//
@@ -1895,7 +1965,8 @@ key for computer centers
 		0,
 		NULL,
 		0,
-/* precache */ ""
+		/* precache */ "",
+		NULL
 	},
 
 /*QUAKED key_power_cube (0 .5 .8) (-16 -16 -16) (16 16 16) TRIGGER_SPAWN NO_TOUCH
@@ -1919,7 +1990,8 @@ warehouse circuits
 		0,
 		NULL,
 		0,
-/* precache */ ""
+		/* precache */ "",
+		NULL
 	},
 
 /*QUAKED key_pyramid (0 .5 .8) (-16 -16 -16) (16 16 16)
@@ -1943,7 +2015,8 @@ key for the entrance of jail3
 		0,
 		NULL,
 		0,
-/* precache */ ""
+		/* precache */ "",
+		NULL
 	},
 
 /*QUAKED key_data_spinner (0 .5 .8) (-16 -16 -16) (16 16 16)
@@ -1967,7 +2040,8 @@ key for the city computer
 		0,
 		NULL,
 		0,
-/* precache */ ""
+		/* precache */ "",
+		NULL
 	},
 
 /*QUAKED key_pass (0 .5 .8) (-16 -16 -16) (16 16 16)
@@ -1991,7 +2065,8 @@ security pass for the security level
 		0,
 		NULL,
 		0,
-/* precache */ ""
+		/* precache */ "",
+		NULL
 	},
 
 /*QUAKED key_blue_key (0 .5 .8) (-16 -16 -16) (16 16 16)
@@ -2015,7 +2090,8 @@ normal door key - blue
 		0,
 		NULL,
 		0,
-/* precache */ ""
+		/* precache */ "",
+		NULL
 	},
 
 /*QUAKED key_red_key (0 .5 .8) (-16 -16 -16) (16 16 16)
@@ -2039,7 +2115,8 @@ normal door key - red
 		0,
 		NULL,
 		0,
-/* precache */ ""
+		/* precache */ "",
+		NULL
 	},
 
 /*QUAKED key_commander_head (0 .5 .8) (-16 -16 -16) (16 16 16)
@@ -2063,7 +2140,8 @@ tank commander's head
 		0,
 		NULL,
 		0,
-/* precache */ ""
+		/* precache */ "",
+		NULL
 	},
 
 /*QUAKED key_airstrike_target (0 .5 .8) (-16 -16 -16) (16 16 16)
@@ -2087,7 +2165,8 @@ tank commander's head
 		0,
 		NULL,
 		0,
-/* precache */ ""
+		/* precache */ "",
+		NULL
 	},
 
 	{
@@ -2108,7 +2187,8 @@ tank commander's head
 		0,
 		NULL,
 		0,
-/* precache */ "items/s_health.wav items/n_health.wav items/l_health.wav items/m_health.wav"
+		/* precache */ "items/s_health.wav items/n_health.wav items/l_health.wav items/m_health.wav",
+		NULL
 	},
 
 	// end of list marker

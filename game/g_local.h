@@ -103,7 +103,8 @@ typedef enum
 	AMMO_ROCKETS,
 	AMMO_GRENADES,
 	AMMO_CELLS,
-	AMMO_SLUGS
+	AMMO_SLUGS,
+	AMMO_PARTS
 } ammo_t;
 
 
@@ -258,6 +259,8 @@ typedef struct gitem_s
 	int			tag;
 
 	char		*precaches;		// string of all models, sounds, and images this item will use
+
+	char		*parts;			// classname for parts used to craft this grenade
 } gitem_t;
 
 
@@ -858,6 +861,8 @@ typedef struct
 	int			max_cells;
 	int			max_slugs;
 
+	int			max_parts;
+	
 	gitem_t		*weapon;
 	gitem_t		*lastweapon;
 

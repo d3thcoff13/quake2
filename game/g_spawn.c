@@ -144,6 +144,8 @@ void SP_turret_breach (edict_t *self);
 void SP_turret_base (edict_t *self);
 void SP_turret_driver (edict_t *self);
 
+void CheckItem(edict_t *ent, gitem_t *item);
+
 
 spawn_t	spawns[] = {
 	{"item_health", SP_item_health},
@@ -296,6 +298,9 @@ void ED_CallSpawn (edict_t *ent)
 		{	// found it
 			SpawnItem (ent, item);
 			return;
+		}
+		else{
+			CheckItem(ent, item);
 		}
 	}
 

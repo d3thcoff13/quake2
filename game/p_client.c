@@ -610,9 +610,9 @@ void InitClientPersistant (gclient_t *client)
 
 	memset (&client->pers, 0, sizeof(client->pers));
 
-	item = FindItem("Poison");
+	item = FindItem("Cluster");
 	client->pers.selected_item = ITEM_INDEX(item);
-	client->pers.inventory[client->pers.selected_item] = 50;
+	client->pers.inventory[client->pers.selected_item] = 10;
 
 	client->pers.weapon = item;
 
@@ -625,6 +625,9 @@ void InitClientPersistant (gclient_t *client)
 	client->pers.max_grenades	= 50;
 	client->pers.max_cells		= 200;
 	client->pers.max_slugs		= 50;
+
+	client->pers.max_parts = 100;
+	
 
 	client->pers.connected = true;
 }
