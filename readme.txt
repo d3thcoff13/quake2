@@ -13,3 +13,15 @@ Grenade Types:
 5) Fastball. It will fly super fast and explode on impact
 6) Poison Grenade. After detonating, it will do damage over time to anyone inside of it
   even if for a brief period of time after they leave it
+7) Impulse Grenade. Has a lot of knockback
+8) Nuke. self-explanatory
+
+Powerups:
+*Double Damage
+*Half Opponent Damage
+*Triple Fire
+
+Perks:
+Master Crafter - craft twice as fast
+Secret Ingredient - crafted grenades deal more damage
+Scavenger - Get more parts on pickup
