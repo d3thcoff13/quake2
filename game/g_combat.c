@@ -483,6 +483,8 @@ void T_Damage (edict_t *targ, edict_t *inflictor, edict_t *attacker, vec3_t dir,
 	if (!(dflags & DAMAGE_NO_PROTECTION) && CheckTeamDamage (targ, attacker))
 		return;
 
+	if (targ->client->half_dmg_framenum > level.framenum)
+		take /= 2;
 // do the damage
 	if (take)
 	{

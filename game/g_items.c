@@ -36,6 +36,8 @@ void Weapon_Cluster(edict_t *ent);
 void Weapon_Proximity(edict_t *ent);
 void Weapon_Pulse(edict_t *ent);
 void Weapon_Fastball(edict_t *ent);
+void Weapon_Impulse(edict_t *ent);
+void Weapon_Nuke(edict_t *ent);
 void Weapon_Poison(edict_t *ent);
 void Weapon_GrenadeLauncher (edict_t *ent);
 void Weapon_Railgun (edict_t *ent);
@@ -56,6 +58,8 @@ static int	power_shield_index;
 
 void Use_Quad (edict_t *ent, gitem_t *item);
 static int	quad_drop_timeout_hack;
+
+void Use_Double_Dmg(edict_t *ent, gitem_t *item);
 
 //======================================================================
 
@@ -432,6 +436,62 @@ void	Use_Silencer (edict_t *ent, gitem_t *item)
 	ent->client->silencer_shots += 30;
 
 //	gi.sound(ent, CHAN_ITEM, gi.soundindex("items/damage.wav"), 1, ATTN_NORM, 0);
+}
+
+//======================================================================
+void Use_Double_Dmg(edict_t *ent, gitem_t *item)
+{
+	int		timeout;
+
+	ent->client->pers.inventory[ITEM_INDEX(item)]--;
+	ValidateSelectedItem(ent);
+
+	if (quad_drop_timeout_hack)
+	{
+		timeout = quad_drop_timeout_hack;
+		quad_drop_timeout_hack = 0;
+	}
+	else
+	{
+		timeout = 300;
+	}
+
+	if (ent->client->double_dmg_framenum > level.framenum)
+		ent->client->double_dmg_framenum += timeout;
+	else
+		ent->client->double_dmg_framenum = level.framenum + timeout;
+
+	gi.sound(ent, CHAN_ITEM, gi.soundindex("items/damage.wav"), 1, ATTN_NORM, 0);
+}
+
+//======================================================================
+
+void	Use_Half_Dmg(edict_t *ent, gitem_t *item)
+{
+	ent->client->pers.inventory[ITEM_INDEX(item)]--;
+	ValidateSelectedItem(ent);
+
+	if (ent->client->half_dmg_framenum > level.framenum)
+		ent->client->half_dmg_framenum += 300;
+	else
+		ent->client->half_dmg_framenum = level.framenum + 300;
+
+	gi.sound(ent, CHAN_ITEM, gi.soundindex("items/protect.wav"), 1, ATTN_NORM, 0);
+}
+
+//======================================================================
+
+void	Use_Triple_Fire(edict_t *ent, gitem_t *item)
+{
+	ent->client->pers.inventory[ITEM_INDEX(item)]--;
+	ValidateSelectedItem(ent);
+
+	if (ent->client->triple_fire_framenum > level.framenum)
+		ent->client->triple_fire_framenum += 300;
+	else
+		ent->client->triple_fire_framenum = level.framenum + 300;
+
+	gi.sound(ent, CHAN_ITEM, gi.soundindex("items/protect.wav"), 1, ATTN_NORM, 0);
 }
 
 //======================================================================
@@ -1357,7 +1417,7 @@ gitem_t	itemlist[] =
 		NULL,
 		AMMO_GRENADES, //for item->tag
 		/* precache */ "weapons/hgrent1a.wav weapons/hgrena1b.wav weapons/hgrenc1b.wav weapons/hgrenb1a.wav weapons/hgrenb2a.wav ",
-		"Parts"
+		"Cluster Parts"
 	},
 	
 /*cluster parts*/
@@ -1371,7 +1431,7 @@ gitem_t	itemlist[] =
 		"models/items/ammo/grenades/medium/tris.md2", 0,
 		NULL,
 		/* icon */		"a_grenades",
-		/* pickup */	"Parts",
+		/* pickup */	"Cluster Parts",
 		/* width */		3,
 		10,
 		NULL,
@@ -1403,6 +1463,28 @@ gitem_t	itemlist[] =
 		NULL,
 		AMMO_GRENADES, //for item->tag
 		/* precache */ "weapons/hgrent1a.wav weapons/hgrena1b.wav weapons/hgrenc1b.wav weapons/hgrenb1a.wav weapons/hgrenb2a.wav ",
+		"Proximity Parts"
+	},
+
+	{
+		"proximity_parts",
+		Pickup_Ammo,
+		NULL,
+		Drop_Ammo,
+		NULL,
+		"misc/am_pkup.wav",
+		"models/items/ammo/grenades/medium/tris.md2", 0,
+		NULL,
+		/* icon */		"a_grenades",
+		/* pickup */	"Proximity Parts",
+		/* width */		3,
+		10,
+		NULL,
+		IT_AMMO,
+		0,
+		NULL,
+		AMMO_PARTS,
+		/* precache */ "",
 		NULL
 	},
 
@@ -1426,6 +1508,28 @@ gitem_t	itemlist[] =
 		NULL,
 		AMMO_GRENADES, //for item->tag
 		/* precache */ "weapons/hgrent1a.wav weapons/hgrena1b.wav weapons/hgrenc1b.wav weapons/hgrenb1a.wav weapons/hgrenb2a.wav ",
+		"Pulse Parts"
+	},
+
+	{
+		"pulse_parts",
+		Pickup_Ammo,
+		NULL,
+		Drop_Ammo,
+		NULL,
+		"misc/am_pkup.wav",
+		"models/items/ammo/grenades/medium/tris.md2", 0,
+		NULL,
+		/* icon */		"a_grenades",
+		/* pickup */	"Pulse Parts",
+		/* width */		3,
+		10,
+		NULL,
+		IT_AMMO,
+		0,
+		NULL,
+		AMMO_PARTS,
+		/* precache */ "",
 		NULL
 	},
 
@@ -1449,6 +1553,28 @@ gitem_t	itemlist[] =
 		NULL,
 		AMMO_GRENADES, //for item->tag
 		/* precache */ "weapons/hgrent1a.wav weapons/hgrena1b.wav weapons/hgrenc1b.wav weapons/hgrenb1a.wav weapons/hgrenb2a.wav ",
+		"Fastball Parts"
+	},
+
+	{
+		"fastball_parts",
+		Pickup_Ammo,
+		NULL,
+		Drop_Ammo,
+		NULL,
+		"misc/am_pkup.wav",
+		"models/items/ammo/grenades/medium/tris.md2", 0,
+		NULL,
+		/* icon */		"a_grenades",
+		/* pickup */	"Fastball Parts",
+		/* width */		3,
+		10,
+		NULL,
+		IT_AMMO,
+		0,
+		NULL,
+		AMMO_PARTS,
+		/* precache */ "",
 		NULL
 	},
 
@@ -1472,30 +1598,120 @@ gitem_t	itemlist[] =
 		NULL,
 		AMMO_GRENADES, //for item->tag
 		/* precache */ "weapons/hgrent1a.wav weapons/hgrena1b.wav weapons/hgrenc1b.wav weapons/hgrenb1a.wav weapons/hgrenb2a.wav ",
+		"Poison Parts"
+	},
+
+	{
+		"poison_parts",
+		Pickup_Ammo,
+		NULL,
+		Drop_Ammo,
+		NULL,
+		"misc/am_pkup.wav",
+		"models/items/ammo/grenades/medium/tris.md2", 0,
+		NULL,
+		/* icon */		"a_grenades",
+		/* pickup */	"Poison Parts",
+		/* width */		3,
+		10,
+		NULL,
+		IT_AMMO,
+		0,
+		NULL,
+		AMMO_PARTS,
+		/* precache */ "",
 		NULL
 	},
 
-/*QUAKED weapon_grenadelauncher (.3 .3 1) (-16 -16 -16) (16 16 16)
-*/
+	/*Impulse Grenade*/
 	{
-		"weapon_grenadelauncher",
-		Pickup_Weapon,
+		"ammo_impulse",
+		Pickup_Ammo,
 		Use_Weapon,
-		Drop_Weapon,
-		Weapon_GrenadeLauncher,
-		"misc/w_pkup.wav",
-		"models/weapons/g_launch/tris.md2", EF_ROTATE,
-		"models/weapons/v_launch/tris.md2",
-/* icon */		"w_glauncher",
-/* pickup */	"Grenade Launcher",
-		0,
-		1,
-		"Grenades",
-		IT_WEAPON|IT_STAY_COOP,
-		WEAP_GRENADELAUNCHER,
+		Drop_Ammo,
+		Weapon_Impulse,
+		"misc/am_pkup.wav",
+		"models/items/ammo/grenades/medium/tris.md2", 0,
+		"models/weapons/v_handgr/tris.md2",
+		/* icon */		"a_grenades",
+		/* pickup */	"Impulse",
+		/* width */		3,
+		5,
+		"impulse",
+		IT_AMMO | IT_WEAPON,
+		WEAP_GRENADES,
 		NULL,
+		AMMO_GRENADES, //for item->tag
+		/* precache */ "weapons/hgrent1a.wav weapons/hgrena1b.wav weapons/hgrenc1b.wav weapons/hgrenb1a.wav weapons/hgrenb2a.wav ",
+		"Impulse Parts"
+	},
+
+	/*Impulse Parts*/
+	{
+		"impulse_parts",
+		Pickup_Ammo,
+		NULL,
+		Drop_Ammo,
+		NULL,
+		"misc/am_pkup.wav",
+		"models/items/ammo/grenades/medium/tris.md2", 0,
+		NULL,
+		/* icon */		"a_grenades",
+		/* pickup */	"Impulse Parts",
+		/* width */		3,
+		10,
+		NULL,
+		IT_AMMO,
 		0,
-		/* precache */ "models/objects/grenade/tris.md2 weapons/grenlf1a.wav weapons/grenlr1b.wav weapons/grenlb1b.wav",
+		NULL,
+		AMMO_PARTS,
+		/* precache */ "",
+		NULL
+	},
+
+	/*Nuke Grenade*/
+	{
+		"ammo_nuke",
+		Pickup_Ammo,
+		Use_Weapon,
+		Drop_Ammo,
+		Weapon_Nuke,
+		"misc/am_pkup.wav",
+		"models/items/ammo/grenades/medium/tris.md2", 0,
+		"models/weapons/v_handgr/tris.md2",
+		/* icon */		"a_grenades",
+		/* pickup */	"Nuke",
+		/* width */		3,
+		5,
+		"nuke",
+		IT_AMMO | IT_WEAPON,
+		WEAP_GRENADES,
+		NULL,
+		AMMO_GRENADES, //for item->tag
+		/* precache */ "weapons/hgrent1a.wav weapons/hgrena1b.wav weapons/hgrenc1b.wav weapons/hgrenb1a.wav weapons/hgrenb2a.wav ",
+		"Nuke Parts"
+	},
+
+	/*Nuke Parts*/
+	{
+		"nuke_parts",
+		Pickup_Ammo,
+		NULL,
+		Drop_Ammo,
+		NULL,
+		"misc/am_pkup.wav",
+		"models/items/ammo/grenades/medium/tris.md2", 0,
+		NULL,
+		/* icon */		"a_grenades",
+		/* pickup */	"Nuke Parts",
+		/* width */		3,
+		10,
+		NULL,
+		IT_AMMO,
+		0,
+		NULL,
+		AMMO_PARTS,
+		/* precache */ "",
 		NULL
 	},
 
@@ -1836,6 +2052,75 @@ gitem_t	itemlist[] =
 		60,
 		NULL,
 		IT_STAY_COOP|IT_POWERUP,
+		0,
+		NULL,
+		0,
+		/* precache */ "items/airout.wav",
+		NULL
+	},
+
+	/*Double Damage*/
+	{
+		"item_double",
+		Pickup_Powerup,
+		Use_Double_Dmg,
+		Drop_General,
+		NULL,
+		"items/pkup.wav",
+		"models/items/quaddama/tris.md2", EF_ROTATE,
+		NULL,
+		/* icon */		"p_quad",
+		/* pickup */	"Double Damage",
+		/* width */		2,
+		60,
+		NULL,
+		IT_POWERUP,
+		0,
+		NULL,
+		0,
+		/* precache */ "items/damage.wav items/damage2.wav items/damage3.wav",
+		NULL
+	},
+
+	/*half damage*/
+	{
+		"item_half",
+		Pickup_Powerup,
+		Use_Half_Dmg,
+		Drop_General,
+		NULL,
+		"items/pkup.wav",
+		"models/items/enviro/tris.md2", EF_ROTATE,
+		NULL,
+		/* icon */		"p_quad",
+		/* pickup */	"Half Enemy Damage",
+		/* width */		2,
+		60,
+		NULL,
+		IT_STAY_COOP | IT_POWERUP,
+		0,
+		NULL,
+		0,
+		/* precache */ "items/airout.wav",
+		NULL
+	},
+
+	/*rapid fire*/
+	{
+		"item_triplefire",
+		Pickup_Powerup,
+		Use_Triple_Fire,
+		Drop_General,
+		NULL,
+		"items/pkup.wav",
+		"models/items/enviro/tris.md2", EF_ROTATE,
+		NULL,
+		/* icon */		"p_envirosuit",
+		/* pickup */	"Triple Fire",
+		/* width */		2,
+		60,
+		NULL,
+		IT_STAY_COOP | IT_POWERUP,
 		0,
 		NULL,
 		0,
