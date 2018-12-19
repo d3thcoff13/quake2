@@ -22,20 +22,20 @@ void CheckItem(edict_t *ent, gitem_t *item)
 		{ "ammo_rockets", "fastball_parts" },
 		{ "ammo_slugs", "poison_parts" },
 		{ "item_quad", "item_double" },
-		{ "item_invulnerability", "item_half_dmg" },
+		{ "item_invulnerability", "item_triplefire" },
 		{ "item_silencer", "item_double" },
 		{ "item_breather", "item_double" },
 		{ "item_enviro", "item_rapid_fire" },
-		{ "item_ancient_head", "item_half_dmg" },
-		{ "item_adrenaline", "item_half_dmg" },
+		{ "item_ancient_head", "item_half" },
+		{ "item_adrenaline", "item_triplefire" },
 		{ "item_bandolier", "item_rapid_fire" },
 		{ "item_pack", "item_rapid_fire" },
-		{ "item_armor_body", "item_half_dmg" },
-		{ "item_armor_combat", "item_half_dmg" },
-		{ "item_armor_jacket", "item_half_dmg" },
-		{ "item_armor_shard", "item_half_dmg" },
-		{ "item_power_screen", "item_half_dmg" },
-		{ "item_power_shield", "item_half_dmg" }
+		{ "item_armor_body", "item_half" },
+		{ "item_armor_combat", "item_triplefire" },
+		{ "item_armor_jacket", "item_triplefire" },
+		{ "item_armor_shard", "item_half" },
+		{ "item_power_screen", "item_half" },
+		{ "item_power_shield", "item_half" }
 	};
 
 	int i;

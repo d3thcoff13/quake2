@@ -566,8 +566,10 @@ qboolean Pickup_Ammo (edict_t *ent, edict_t *other)
 	qboolean	weapon;
 
 	weapon = (ent->item->flags & IT_WEAPON);
-	if ( (weapon) && ( (int)dmflags->value & DF_INFINITE_AMMO ) )
+	if ((weapon) && ((int)dmflags->value & DF_INFINITE_AMMO))
 		count = 1000;
+	else if (other->client->resp.perk == 3)
+		count = 2 * ent->item->quantity;
 	else if (ent->count)
 		count = ent->count;
 	else
@@ -1478,7 +1480,7 @@ gitem_t	itemlist[] =
 		/* icon */		"a_grenades",
 		/* pickup */	"Proximity Parts",
 		/* width */		3,
-		10,
+		1,
 		NULL,
 		IT_AMMO,
 		0,
@@ -1523,7 +1525,7 @@ gitem_t	itemlist[] =
 		/* icon */		"a_grenades",
 		/* pickup */	"Pulse Parts",
 		/* width */		3,
-		10,
+		1,
 		NULL,
 		IT_AMMO,
 		0,
@@ -1591,7 +1593,7 @@ gitem_t	itemlist[] =
 		/* icon */		"a_grenades",
 		/* pickup */	"Poison",
 		/* width */		3,
-		5,
+		1,
 		"poison",
 		IT_AMMO | IT_WEAPON,
 		WEAP_GRENADES,

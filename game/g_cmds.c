@@ -19,6 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 #include "g_local.h"
 #include "m_player.h"
+#include "b_playerperks.h"
 
 
 char *ClientTeam (edict_t *ent)
@@ -406,7 +407,7 @@ void Cmd_Use_f (edict_t *ent)
 		gi.cprintf (ent, PRINT_HIGH, "unknown item: %s\n", s);
 		return;
 	}
-	if (!it->use)
+	/*if (!it->use)
 	{
 		gi.cprintf (ent, PRINT_HIGH, "Item is not usable.\n");
 		return;
@@ -416,8 +417,9 @@ void Cmd_Use_f (edict_t *ent)
 	{
 		gi.cprintf (ent, PRINT_HIGH, "Out of item: %s\n", s);
 		return;
-	}
+	}*/
 
+	gi.centerprintf(ent, "Selected %s", it->pickup_name);
 	it->use (ent, it);
 }
 
@@ -538,8 +540,8 @@ void Cmd_WeapPrev_f (edict_t *ent)
 	for (i=1 ; i<=MAX_ITEMS ; i++)
 	{
 		index = (selected_weapon + i)%MAX_ITEMS;
-		if (!cl->pers.inventory[index])
-			continue;
+		//if (!cl->pers.inventory[index])
+			//continue;
 		it = &itemlist[index];
 		if (!it->use)
 			continue;
@@ -574,8 +576,8 @@ void Cmd_WeapNext_f (edict_t *ent)
 	for (i=1 ; i<=MAX_ITEMS ; i++)
 	{
 		index = (selected_weapon + MAX_ITEMS - i)%MAX_ITEMS;
-		if (!cl->pers.inventory[index])
-			continue;
+		//if (!cl->pers.inventory[index])
+			//continue;
 		it = &itemlist[index];
 		if (!it->use)
 			continue;
@@ -985,6 +987,12 @@ void ClientCommand (edict_t *ent)
 		Cmd_PutAway_f (ent);
 	else if (Q_stricmp (cmd, "wave") == 0)
 		Cmd_Wave_f (ent);
+	else if (Q_stricmp(cmd, "Master Crafter") == 0) 	
+		Cmd_Perks_f(ent, cmd);			
+	else if (Q_stricmp(cmd, "Secret Ingredient") == 0)	
+		Cmd_Perks_f(ent, cmd);
+	else if (Q_stricmp(cmd, "Scavenger") == 0)
+		Cmd_Perks_f(ent, cmd);
 	else if (Q_stricmp(cmd, "playerlist") == 0)
 		Cmd_PlayerList_f(ent);
 	else	// anything that doesn't match a command will be a chat

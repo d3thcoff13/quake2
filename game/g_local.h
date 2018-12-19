@@ -741,6 +741,8 @@ void fire_proximity(edict_t *self, vec3_t start, vec3_t aimdir, int damage, int 
 void fire_pulse(edict_t *self, vec3_t start, vec3_t aimdir, int damage, int speed, float timer, float damage_radius);
 void fire_fastball(edict_t *self, vec3_t start, vec3_t aimdir, int damage, int speed, float timer, float damage_radius);
 void fire_poison(edict_t *self, vec3_t start, vec3_t aimdir, int damage, int speed, float timer, float damage_radius);
+void fire_impulse(edict_t *self, vec3_t start, vec3_t aimdir, int damage, int speed, float timer, float damage_radius, qboolean held);
+void fire_nuke(edict_t *self, vec3_t start, vec3_t aimdir, int damage, int speed, float timer, float damage_radius, qboolean held);
 
 
 //
@@ -883,7 +885,9 @@ typedef struct
 	int			score;				// frags, etc
 	vec3_t		cmd_angles;			// angles sent over in the last command
 
+	int             perk;
 	qboolean	spectator;			// client is a spectator
+
 } client_respawn_t;
 
 // this structure is cleared on each PutClientInServer(),
@@ -954,6 +958,9 @@ struct gclient_s
 	float		invincible_framenum;
 	float		breather_framenum;
 	float		enviro_framenum;
+	float		double_dmg_framenum;
+	float		half_dmg_framenum;
+	float		triple_fire_framenum;
 
 	qboolean	grenade_blew_up;
 	float		grenade_time;

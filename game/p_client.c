@@ -19,6 +19,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 #include "g_local.h"
 #include "m_player.h"
+#include "b_playerperks.h"
+
 
 void ClientUserinfoChanged (edict_t *ent, char *userinfo);
 
@@ -610,7 +612,7 @@ void InitClientPersistant (gclient_t *client)
 
 	memset (&client->pers, 0, sizeof(client->pers));
 
-	item = FindItem("Cluster");
+	item = FindItem("Grenades");
 	client->pers.selected_item = ITEM_INDEX(item);
 	client->pers.inventory[client->pers.selected_item] = 10;
 
@@ -627,7 +629,6 @@ void InitClientPersistant (gclient_t *client)
 	client->pers.max_slugs		= 50;
 
 	client->pers.max_parts = 50;
-	
 
 	client->pers.connected = true;
 }
@@ -1283,6 +1284,9 @@ void ClientBeginDeathmatch (edict_t *ent)
 
 	gi.bprintf (PRINT_HIGH, "%s entered the game\n", ent->client->pers.netname);
 
+
+	CheckPerks(ent);
+
 	// make sure all view stuff is valid
 	ClientEndServerFrame (ent);
 }
@@ -1591,6 +1595,8 @@ void ClientThink(edict_t *ent, usercmd_t *ucmd)
 		return;
 	}
 
+	CheckPerks(ent);
+
 	pm_passent = ent;
 
 	if (ent->client->chase_target) {
@@ -1600,8 +1606,7 @@ void ClientThink(edict_t *ent, usercmd_t *ucmd)
 		client->resp.cmd_angles[2] = SHORT2ANGLE(ucmd->angles[2]);
 
 	}
-	else {
-
+	else{
 		// set up for pmove
 		memset(&pm, 0, sizeof(pm));
 
@@ -1753,7 +1758,7 @@ void ClientThink(edict_t *ent, usercmd_t *ucmd)
 	//For poison grenades
 	if (ent->isPoisoned){
 		if (ent->poison_duration > level.time){
-			T_Damage(ent, ent->poison_source, ent->poison_source->owner, vec3_origin, vec3_origin, vec3_origin, 1, 0, DAMAGE_NO_KNOCKBACK, 0);
+			T_Damage(ent, ent->poison_source, ent->poison_source->owner, vec3_origin, vec3_origin, vec3_origin, 2, 0, DAMAGE_NO_KNOCKBACK, 0);
 		}
 		if (ent->poison_duration < level.time)
 			ent->isPoisoned = false;
