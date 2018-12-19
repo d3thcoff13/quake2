@@ -1,29 +1,15 @@
+This is a grenade mod that replaces all weapons with different grenade types. To use the mod, just start a 
+multiplayer match and find a grenade pickup. The grenades laying on the ground are are grenade parts, which 
+can be used to craft the new grenades. To craft a grenade, use the number keys 0-9 (though only 1-7 are 
+working) to select a grenade, then hold the right mouse button to craft it. You cannot craft a grenade 
+that you don't have parts for.
 
-This is the complete source code for Quake 2, version 3.19, buildable with
-visual C++ 6.0.  The linux version should be buildable, but we haven't
-tested it for the release.
+Grenade Types:
 
-The code is all licensed under the terms of the GPL (gnu public license).  
-You should read the entire license, but the gist of it is that you can do 
-anything you want with the code, including sell your new version.  The catch 
-is that if you distribute new binary versions, you are required to make the 
-entire source code available for free to everyone.
-
-The primary intent of this release is for entertainment and educational 
-purposes, but the GPL does allow commercial exploitation if you obey the 
-full license.  If you want to do something commercial and you just can't bear 
-to have your source changes released, we could still negotiate a separate 
-license agreement (for $$$), but I would encourage you to just live with the 
-GPL.
-
-All of the Q2 data files remain copyrighted and licensed under the 
-original terms, so you cannot redistribute data from the original game, but if 
-you do a true total conversion, you can create a standalone game based on 
-this code.
-
-Thanks to Robert Duffy for doing the grunt work of building this release.
-
-John Carmack
-Id Software
-
-
+1) The regular hand grenade
+2) A cluster bomb. It will split into 4 grenades when it explodes
+3) A Proximity mine. It will detonate when an enemy comes near it
+4) Pulse Grenade. It will detonate 3 times.
+5) Fastball. It will fly super fast and explode on impact
+6) Poison Grenade. After detonating, it will do damage over time to anyone inside of it
+  even if for a brief period of time after they leave it
